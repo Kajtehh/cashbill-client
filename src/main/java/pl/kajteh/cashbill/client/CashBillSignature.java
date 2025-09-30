@@ -8,6 +8,8 @@ import java.security.NoSuchAlgorithmException;
 
 public final class CashBillSignature {
 
+    private CashBillSignature() {}
+
     public static String generateSign(final CashBillPayment payment, final String secretKey) {
         final StringBuilder sb = new StringBuilder();
 
@@ -33,6 +35,13 @@ public final class CashBillSignature {
             sb.append(nullToEmpty(payment.personalData().house()));
             sb.append(nullToEmpty(payment.personalData().flat()));
             sb.append(nullToEmpty(payment.personalData().ip()));
+        }
+
+        if(!payment.options().isEmpty()) {
+            payment.options().forEach(option -> {
+                sb.append(nullToEmpty(option.name()));
+                sb.append(nullToEmpty(option.value()));
+            });
         }
 
         sb.append(secretKey);

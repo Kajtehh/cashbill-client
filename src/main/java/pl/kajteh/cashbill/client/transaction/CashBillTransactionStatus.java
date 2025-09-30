@@ -3,7 +3,6 @@ package pl.kajteh.cashbill.client.transaction;
 import com.google.gson.annotations.SerializedName;
 
 public enum CashBillTransactionStatus {
-
     @SerializedName("PreStart")
     PRE_START(false),
 

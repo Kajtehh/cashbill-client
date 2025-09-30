@@ -3,6 +3,9 @@ package pl.kajteh.cashbill.client.payment;
 import pl.kajteh.cashbill.client.data.CashBillAmountData;
 import pl.kajteh.cashbill.client.data.CashBillPersonalData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CashBillPayment {
 
     private final String title;
@@ -15,15 +18,7 @@ public class CashBillPayment {
     private String languageCode;
     private CashBillPersonalData personalData;
     private String referer;
-
-    /*private Map<String, String> options; todo
-    "options": [
-    {
-      "name": "string",
-      "value": "string"
-    }
-  ],
-     */
+    private final List<CashBillPaymentOption> options = new ArrayList<>();
 
     public CashBillPayment(final String title, final double value, final String currencyCode) {
         this.title = title;
@@ -82,6 +77,11 @@ public class CashBillPayment {
         return this;
     }
 
+    public CashBillPayment addOption(final String name, final String value) {
+        this.options.add(new CashBillPaymentOption(name, value));
+        return this;
+    }
+
     public CashBillAmountData amount() {
         return this.amount;
     }
@@ -120,5 +120,9 @@ public class CashBillPayment {
 
     public String referer() {
         return this.referer;
+    }
+
+    public List<CashBillPaymentOption> options() {
+        return this.options;
     }
 }

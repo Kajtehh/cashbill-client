@@ -6,7 +6,11 @@ public enum CashBillEnvironment {
 
     private final String baseUrl;
 
-    CashBillEnvironment(String baseUrl) { this.baseUrl = baseUrl; }
+    CashBillEnvironment(final String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
-    public String baseUrl() { return baseUrl; }
+    public String baseUrl() {
+        return this.baseUrl;
+    }
 }

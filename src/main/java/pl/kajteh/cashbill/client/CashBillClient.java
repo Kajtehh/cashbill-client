@@ -52,7 +52,6 @@ public final class CashBillClient {
         final Request request = new Request.Builder()
                 .url(this.baseUrl + "/payment/" + this.shopId)
                 .post(RequestBody.create(json, MEDIA_TYPE))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .build();
 
@@ -70,10 +69,6 @@ public final class CashBillClient {
         } catch (final IOException e) {
             throw new CashBillException("Unexpected error: " + e.getMessage());
         }
-    }
-
-    public CashBillTransactionDetails transactionDetails(final CashBillTransaction transaction) throws CashBillException {
-        return this.transactionDetails(transaction.id());
     }
 
     public CashBillTransactionDetails transactionDetails(final String orderId) throws CashBillException {
@@ -98,6 +93,10 @@ public final class CashBillClient {
         }
     }
 
+    public CashBillTransactionDetails transactionDetails(final CashBillTransaction transaction) throws CashBillException {
+        return this.transactionDetails(transaction.id());
+    }
+
     public List<CashBillPaymentChannel> paymentChannels(final String languageCode) throws CashBillException {
         final Request request = new Request.Builder()
                 .url(this.baseUrl + "/paymentchannels/" + this.shopId + "/" + languageCode)
@@ -118,6 +117,10 @@ public final class CashBillClient {
         } catch (final IOException e) {
             throw new CashBillException("Unexpected error: " + e.getMessage());
         }
+    }
+
+    public List<CashBillPaymentChannel> paymentChannels() throws CashBillException {
+        return this.paymentChannels("PL");
     }
 
     public CashBillTransactionDetails verifyTransactionStatusChange(final String orderId, final String sign) throws CashBillException {
