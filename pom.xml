@@ -27,4 +27,11 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Kajtehh Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Kajtehh/cashbill-client</url>
+        </repository>
+    </distributionManagement>
 </project>
