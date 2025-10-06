@@ -24,15 +24,15 @@ public final class CashBillClient {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final MediaType MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
 
+    public CashBillClient(final String shopId, final String secretKey, final CashBillEnvironment environment) {
+        this(shopId, secretKey, environment, new OkHttpClient());
+    }
+
     public CashBillClient(final String shopId, final String secretKey, final CashBillEnvironment environment, final OkHttpClient httpClient) {
         this.shopId = shopId;
         this.secretKey = secretKey;
         this.baseUrl = environment.baseUrl();
         this.httpClient = httpClient;
-    }
-
-    public CashBillClient(final String shopId, final String secretKey, final CashBillEnvironment environment) {
-        this(shopId, secretKey, environment, new OkHttpClient());
     }
 
     public static CashBillClient production(final String shopId, final String secretKey) {
