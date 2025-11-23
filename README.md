@@ -5,13 +5,6 @@ Allows creating transactions, checking transaction details, and fetching payment
 
 ---
 
-## ⚠️ Disclaimer
-
-This library is an **unofficial Java client** for the CashBill API.  
-The author is **not affiliated** with CashBill and cannot guarantee compatibility if the API changes in the future.
-
----
-
 ## API Documentation
 
 The full CashBill API documentation (endpoints, JSON formats, examples) is available here:  
