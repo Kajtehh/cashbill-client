@@ -106,14 +106,14 @@ CashBillTransactionDetails verifiedTransaction =
 
 | Status                 | Description                            | Final |
 | ---------------------- | -------------------------------------- | ----- |
-| PRE_START              | Payment started, no channel chosen yet | No    |
-| START                  | Payment started, customer not paid     | No    |
-| NEGATIVE_AUTHORIZATION | Payment channel refused payment        | No    |
-| ABORT                  | Customer aborted payment               | No    |
-| FRAUD                  | Payment channel flagged as fraud       | Yes   |
-| POSITIVE_AUTHORIZATION | Payment channel accepted transaction   | No    |
-| POSITIVE_FINISH        | Payment confirmed by channel           | Yes   |
-| NEGATIVE_FINISH        | Payment rejected by channel            | Yes   |
+| PRE_START              | Payment started, no channel chosen yet | ❌   |
+| START                  | Payment started, customer not paid     | ❌   |
+| NEGATIVE_AUTHORIZATION | Payment channel refused payment        | ❌   |
+| ABORT                  | Customer aborted payment               | ❌   |
+| FRAUD                  | Payment channel flagged as fraud       | ✅   |
+| POSITIVE_AUTHORIZATION | Payment channel accepted transaction   | ❌   |
+| POSITIVE_FINISH        | Payment confirmed by channel           | ✅   |
+| NEGATIVE_FINISH        | Payment rejected by channel            | ✅   |
 
 ## Support
 
