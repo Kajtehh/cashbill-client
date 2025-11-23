@@ -11,7 +11,7 @@ public final class CashBillSignature {
     private CashBillSignature() {}
 
     public static String generateSign(final CashBillPayment payment, final String secretKey) {
-        final StringBuilder sb = new StringBuilder();
+        final var sb = new StringBuilder();
 
         sb.append(payment.title());
         sb.append(payment.amount().value());
@@ -59,9 +59,9 @@ public final class CashBillSignature {
 
     private static String sha1Hex(final String input) {
         try {
-            final MessageDigest md = MessageDigest.getInstance("SHA-1");
+            final var md = MessageDigest.getInstance("SHA-1");
             final byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
-            final StringBuilder hex = new StringBuilder();
+            final var hex = new StringBuilder();
 
             for (final byte b : digest) {
                 hex.append(String.format("%02x", b));
@@ -75,10 +75,10 @@ public final class CashBillSignature {
 
     public static String generateNotificationSign(final String cmd, final String args, final String secretKey) {
         try {
-            final String toSign = cmd + args + secretKey;
-            final MessageDigest md = MessageDigest.getInstance("MD5");
+            final var toSign = cmd + args + secretKey;
+            final var md = MessageDigest.getInstance("MD5");
             final byte[] digest = md.digest(toSign.getBytes(StandardCharsets.UTF_8));
-            final StringBuilder hex = new StringBuilder();
+            final var hex = new StringBuilder();
 
             for (final byte b : digest) {
                 hex.append(String.format("%02x", b));
@@ -91,7 +91,7 @@ public final class CashBillSignature {
     }
 
     public static boolean verifySign(final String cmd, final String args, final String sign, final String secretKey) {
-        final String expectedSign = generateNotificationSign(cmd, args, secretKey);
+        final var expectedSign = generateNotificationSign(cmd, args, secretKey);
         return expectedSign.equalsIgnoreCase(sign);
     }
 }

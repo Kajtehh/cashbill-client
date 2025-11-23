@@ -2,7 +2,6 @@ package pl.kajteh.cashbill.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import pl.kajteh.cashbill.client.payment.CashBillPayment;
@@ -24,17 +23,6 @@ public final class CashBillClient {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final MediaType MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
 
-    public CashBillClient(final String shopId, final String secretKey, final CashBillEnvironment environment, final OkHttpClient httpClient) {
-        this.shopId = shopId;
-        this.secretKey = secretKey;
-        this.baseUrl = environment.baseUrl();
-        this.httpClient = httpClient;
-    }
-
-    public CashBillClient(final String shopId, final String secretKey, final CashBillEnvironment environment) {
-        this(shopId, secretKey, environment, new OkHttpClient());
-    }
-
     public static CashBillClient production(final String shopId, final String secretKey) {
         return new CashBillClient(shopId, secretKey, CashBillEnvironment.PRODUCTION);
     }
@@ -43,20 +31,31 @@ public final class CashBillClient {
         return new CashBillClient(shopId, secretKey, CashBillEnvironment.TEST);
     }
 
+    public CashBillClient(final String shopId, final String secretKey, final CashBillEnvironment environment) {
+        this(shopId, secretKey, environment, new OkHttpClient());
+    }
+
+    public CashBillClient(final String shopId, final String secretKey, final CashBillEnvironment environment, final OkHttpClient httpClient) {
+        this.shopId = shopId;
+        this.secretKey = secretKey;
+        this.baseUrl = environment.baseUrl();
+        this.httpClient = httpClient;
+    }
+
     public CashBillTransaction createTransaction(final CashBillPayment payment) throws CashBillException {
-        final JsonObject jsonObject = GSON.toJsonTree(payment).getAsJsonObject();
+        final var jsonObject = GSON.toJsonTree(payment).getAsJsonObject();
 
         jsonObject.addProperty("sign", CashBillSignature.generateSign(payment, this.secretKey));
 
-        final String json = GSON.toJson(jsonObject);
-        final Request request = new Request.Builder()
+        final var json = GSON.toJson(jsonObject);
+        final var request = new Request.Builder()
                 .url(this.baseUrl + "/payment/" + this.shopId)
                 .post(RequestBody.create(json, MEDIA_TYPE))
                 .addHeader("Accept", "application/json")
                 .build();
 
-        try (final Response response = this.httpClient.newCall(request).execute()) {
-            final String responseBody = response.body().string();
+        try (final var response = this.httpClient.newCall(request).execute()) {
+            final var responseBody = response.body().string();
 
             if(!response.isSuccessful()) {
                 throw new CashBillException(
@@ -72,13 +71,13 @@ public final class CashBillClient {
     }
 
     public CashBillTransactionDetails transactionDetails(final String orderId) throws CashBillException {
-        final Request request = new Request.Builder()
+        final var request = new Request.Builder()
                 .url(this.baseUrl + "/payment/" + this.shopId + "/" + orderId + "?sign=" + CashBillSignature.generateSign(orderId, this.secretKey))
                 .addHeader("Accept", "application/json")
                 .build();
 
-        try (final Response response = this.httpClient.newCall(request).execute()) {
-            final String responseBody = response.body().string();
+        try (final var response = this.httpClient.newCall(request).execute()) {
+            final var responseBody = response.body().string();
 
             if (!response.isSuccessful()) {
                 throw new CashBillException(
@@ -98,13 +97,13 @@ public final class CashBillClient {
     }
 
     public List<CashBillPaymentChannel> paymentChannels(final String languageCode) throws CashBillException {
-        final Request request = new Request.Builder()
+        final var request = new Request.Builder()
                 .url(this.baseUrl + "/paymentchannels/" + this.shopId + "/" + languageCode)
                 .addHeader("Accept", "application/json")
                 .build();
 
-        try (final Response response = this.httpClient.newCall(request).execute()) {
-            final String responseBody = response.body().string();
+        try (final var response = this.httpClient.newCall(request).execute()) {
+            final var responseBody = response.body().string();
 
             if (!response.isSuccessful()) {
                 throw new CashBillException(
@@ -119,11 +118,11 @@ public final class CashBillClient {
         }
     }
 
-    public List<CashBillPaymentChannel> paymentChannels() throws CashBillException {
-        return this.paymentChannels("PL");
-    }
+    public CashBillTransactionDetails verifyTransactionStatusChange(final String cmd, final String orderId, final String sign) throws CashBillException {
+        if(!cmd.equals("transactionStatusChanged")) {
+            throw new CashBillException("Invalid command");
+        }
 
-    public CashBillTransactionDetails verifyTransactionStatusChange(final String orderId, final String sign) throws CashBillException {
         if (!CashBillSignature.verifySign("transactionStatusChanged", orderId, sign, this.secretKey)) {
             throw new CashBillException("Invalid signature for transaction: " + orderId);
         }
